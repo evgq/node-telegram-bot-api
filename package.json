@@ -1,18 +1,13 @@
 {
-  "name": "node-telegram-bot-api",
+  "name": "@salagin/fork-node-telegram-bot-api",
   "version": "0.64.0",
-  "description": "Telegram Bot API",
+  "description": "Fork Telegram Bot API",
   "main": "./index.js",
   "directories": {
     "example": "examples",
     "test": "test"
   },
-  "keywords": [
-    "telegram",
-    "telegram bot",
-    "telegram bot api",
-    "bot"
-  ],
+  "keywords": [],
   "scripts": {
     "gen-doc": "echo 'WARNING: `npm run gen-doc` is deprecated. Use `npm run doc` instead.' && npm run doc",
     "doc": "jsdoc2md --files src/telegram.js --template doc/api.hbs > doc/api.md",

@@ -677,31 +677,37 @@ class TelegramBot extends EventEmitter {
       metadata.type = TelegramBot.messageTypes.find((messageType) => {
         return message[messageType];
       });
-      this.emit('message', message, metadata);
+      this.emit(
+        'message',
+        {
+          message,
+          next: (data) => {
+            if (message.text) {
+              debug('Text message');
+              this._textRegexpCallbacks.some(reg => {
+                debug('Matching %s with %s', message.text, reg.regexp);
+
+                if (!(reg.regexp instanceof RegExp))
+                  reg.regexp = new RegExp(reg.regexp);
+
+                const result = reg.regexp.exec(message.text);
+                if (!result)
+                  return false;
+                // reset index so we start at the beginning of the regex each time
+                reg.regexp.lastIndex = 0;
+                debug('Matches %s', reg.regexp);
+                reg.callback({message, prev: data}, result);
+                // returning truthy value exits .some
+                return this.options.onlyFirstMatch;
+              });
+            }
+          }
+        },
+        metadata
+      );
       if (metadata.type) {
         debug('Emitting %s: %j', metadata.type, message);
         this.emit(metadata.type, message, metadata);
-      }
-      if (message.text) {
-        debug('Text message');
-        this._textRegexpCallbacks.some(reg => {
-          debug('Matching %s with %s', message.text, reg.regexp);
-
-          if (!(reg.regexp instanceof RegExp)) {
-            reg.regexp = new RegExp(reg.regexp);
-          }
-
-          const result = reg.regexp.exec(message.text);
-          if (!result) {
-            return false;
-          }
-          // reset index so we start at the beginning of the regex each time
-          reg.regexp.lastIndex = 0;
-          debug('Matches %s', reg.regexp);
-          reg.callback(message, result);
-          // returning truthy value exits .some
-          return this.options.onlyFirstMatch;
-        });
       }
       if (message.reply_to_message) {
         // Only callbacks waiting for this message
