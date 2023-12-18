@@ -654,7 +654,7 @@ class TelegramBot extends EventEmitter {
    * @param  {Object} update
    * @see https://core.telegram.org/bots/api#update
    */
-  processUpdate(update) {
+  async processUpdate(update) {
     debug('Process Update %j', update);
     const message = update.message;
     const editedMessage = update.edited_message;

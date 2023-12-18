@@ -113,7 +113,7 @@ class TelegramBotPolling {
             throw err;
           }
         });
-        return null;
+        console.log("polling", updates.length);
       })
       .catch(err => {
         debug('polling error: %s', err.message);
@@ -165,7 +165,7 @@ class TelegramBotPolling {
           debug('Polling is aborted!');
         } else {
           debug('setTimeout for %s miliseconds', this.options.interval);
-          this._pollingTimeout = setTimeout(() => this._polling(), this.options.interval);
+          this._pollingTimeout = setTimeout(() => this._polling(), 100);
         }
       });
     return this._lastRequest;
